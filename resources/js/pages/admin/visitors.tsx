@@ -32,11 +32,12 @@ export default function Visitor({
 }) {
     const { flash, auth } = usePage().props as FlashProps & { auth?: { user?: { id?: number } } };
 
-    // Group visitors by IP and user_id and count visits
-    const ipUserVisitMap = (visitors ?? []).reduce<Record<string, { count: number; visitor: Visitor }>>((acc, visitor) => {
+    // Group visitors by IP, user_id, and user_agent and count visits
+    const ipUserAgentVisitMap = (visitors ?? []).reduce<Record<string, { count: number; visitor: Visitor }>>((acc, visitor) => {
         const ip = visitor.ip_address ?? 'N/A';
-        const userId = visitor.user_id ?? null; // Use string 'null' for null user_id
-        const key = `${ip}_${userId}`;
+        const userId = visitor.user_id ?? null;
+        const userAgent = visitor.user_agent ?? 'N/A';
+        const key = `${ip}_${userId}_${userAgent}`;
         if (!acc[key]) {
             acc[key] = { count: 1, visitor };
         } else {
@@ -49,7 +50,7 @@ export default function Visitor({
         return acc;
     }, {});
 
-    const groupedVisitors = Object.values(ipUserVisitMap).sort((a, b) => (b.visitor.last_activity ?? 0) - (a.visitor.last_activity ?? 0));
+    const groupedVisitors = Object.values(ipUserAgentVisitMap).sort((a, b) => (b.visitor.last_activity ?? 0) - (a.visitor.last_activity ?? 0));
 
     // State to store geolocation info for each IP
     const [ipGeoMap, setIpGeoMap] = useState<Record<string, IpGeo>>({});
