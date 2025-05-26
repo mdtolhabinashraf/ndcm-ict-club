@@ -1,0 +1,21 @@
+[
+    {
+        "id": 1,
+        "title": "Website Development Olympiad",
+        "description": null,
+        "image": "\/storage\/events\/website-development-olympiad-yxHNf0P8T0-20250520043843\/image.webp",
+        "terms_condition": "\/storage\/events\/website-development-olympiad-yxHNf0P8T0-20250520043843\/terms_conditions.webp",
+        "folder_path": "events\/website-development-olympiad-yxHNf0P8T0-20250520043843",
+        "location": "ICT Lab, Room: 301",
+        "registration_fee": 100,
+        "registration_for": "Everyone",
+        "registration_start": "2025-05-08T08:00",
+        "registration_end": "2025-05-25T23:59",
+        "start": "2025-05-28T12:00",
+        "end": "2025-05-28T13:00",
+        "contact_details": "[{\"name\":\"Nihar Ranjan Chakrabarty\",\"title\":\"Moderator, Notre Dame ICT Club\",\"country_code\":\"+880\",\"phone\":\"1746475395\"},{\"name\":\"Rezwanul Haque Apurbo\",\"title\":\"President, Notre Dame ICT Club\",\"country_code\":\"+880\",\"phone\":\"1302855276\"},{\"name\":\"Mahadi Amin\",\"title\":\"General Secretary, Notre Dame ICT Club\",\"country_code\":\"+880\",\"phone\":\"1767438696\"}]",
+        "status": "Publish",
+        "created_at": "2025-05-20T04:38:43.000000Z",
+        "updated_at": "2025-05-25T18:45:47.000000Z"
+    }
+]

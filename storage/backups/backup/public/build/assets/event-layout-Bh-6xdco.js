@@ -1,0 +1,1 @@
+import{j as r}from"./app-qWV2oIGm.js";import{N as l}from"./nav-layout-iV7igMfu.js";const o=[{title:"Create",href:"/admin/event/create",icon:null},{title:"All",href:"/admin/event/all",icon:null}];function m({heading:t=null,children:e,sidebarNavItems:n=o,className:a}){return r.jsx(l,{heading:t,sidebarNavItems:n,className:a,children:e})}export{m as E,o as S};
