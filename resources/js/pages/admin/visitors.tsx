@@ -21,7 +21,15 @@ type IpGeo = {
     zip?: string;
 };
 
-export default function Visitor({ visitors, currentUserIp }: { visitors?: Visitor[]; currentUserIp?: string }) {
+export default function Visitor({
+    visitors,
+    currentUserIp,
+    currentUserAgent,
+}: {
+    visitors?: Visitor[];
+    currentUserIp?: string;
+    currentUserAgent?: string;
+}) {
     const { flash, auth } = usePage().props as FlashProps & { auth?: { user?: { id?: number } } };
 
     // Group visitors by IP and user_id and count visits
@@ -120,9 +128,11 @@ export default function Visitor({ visitors, currentUserIp }: { visitors?: Visito
                                             <tr key={visitor.ip_address} className="border-b text-[12px] whitespace-nowrap md:text-sm">
                                                 <td className="px-6 py-4">
                                                     {visitor.user_id ?? 'N/A'}
-                                                    {visitor.ip_address && visitor.ip_address === currentUserIp && (
-                                                        <span className="text-focus ml-2 text-xs font-bold">(current)</span>
-                                                    )}
+                                                    {visitor.ip_address &&
+                                                        visitor.ip_address === currentUserIp &&
+                                                        visitor.user_agent === currentUserAgent && (
+                                                            <span className="text-focus ml-2 text-xs font-bold">(current)</span>
+                                                        )}
                                                 </td>
                                                 <td className="px-6 py-4">
                                                     {visitor.ip_address ?? 'N/A'}

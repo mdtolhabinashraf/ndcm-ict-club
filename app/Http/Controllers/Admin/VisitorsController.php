@@ -12,10 +12,12 @@ class VisitorsController extends Controller
     {
         $visitors = DB::table('sessions')->get();
         $currentUserIp = request()->ip();
+        $currentUserAgent = request()->userAgent();
 
         return inertia('admin/visitors', [
             'visitors' => $visitors,
             'currentUserIp' => $currentUserIp,
+            'currentUserAgent' => $currentUserAgent,
         ]);
     }
 }
