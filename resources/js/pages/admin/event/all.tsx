@@ -6,6 +6,7 @@ import { FlashProps } from '@/layouts/app/app-sidebar-layout';
 import { BreadcrumbItem, Event } from '@/types';
 import { Head, usePage } from '@inertiajs/react';
 import axios from 'axios';
+import { useState } from 'react';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -16,6 +17,19 @@ const breadcrumbs: BreadcrumbItem[] = [
 
 export default function Events({ events }: { events: Event[] }) {
     const { flash } = usePage().props as FlashProps;
+    const [visibleCount, setVisibleCount] = useState(10);
+    const [loading, setLoading] = useState(false);
+
+    const handleLoadMore = () => {
+        setLoading(true);
+        setTimeout(() => {
+            setVisibleCount((prev) => prev + 10);
+            setLoading(false);
+        }, 500);
+    };
+
+    const visibleEvents = events.slice(0, visibleCount);
+
     return (
         <AppLayout breadcrumbs={breadcrumbs} flash={flash}>
             <Head title="Club Events" />
@@ -54,7 +68,7 @@ export default function Events({ events }: { events: Event[] }) {
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            {events.map((event) => (
+                                            {visibleEvents.map((event) => (
                                                 <tr key={event.id} className="border-b text-[12px] whitespace-nowrap md:text-sm">
                                                     <td className="px-6 py-4">
                                                         {event.title.length > 22 ? `${event.title.slice(0, 20)}...` : event.title}
@@ -101,6 +115,13 @@ export default function Events({ events }: { events: Event[] }) {
                                     </table>
                                 </div>
                             </div>
+                            {visibleCount < events.length && (
+                                <div className="my-4 flex justify-center">
+                                    <Button variant="outline" onClick={handleLoadMore} disabled={loading}>
+                                        {loading ? 'Loading...' : 'Load More'}
+                                    </Button>
+                                </div>
+                            )}
                         </div>
                     </div>
                 </div>

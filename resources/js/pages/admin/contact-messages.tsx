@@ -20,11 +20,26 @@ export default function contactMessages({ contactMessages }: { contactMessages?:
     const { flash } = usePage().props as FlashProps;
     const [open, setOpen] = useState(false);
     const [selected, setSelected] = useState<ContactForm | null>(null);
+    const [visibleCount, setVisibleCount] = useState(10);
+    const [loading, setLoading] = useState(false);
 
     const handleView = (msg: ContactForm) => {
         setSelected(msg);
         setOpen(true);
     };
+
+    const handleLoadMore = () => {
+        setLoading(true);
+        setTimeout(() => {
+            setVisibleCount((prev) => prev + 10);
+            setLoading(false);
+        }, 500); // Simulate loading
+    };
+
+    const visibleMessages = (contactMessages ?? [])
+        .slice()
+        .sort((a, b) => new Date(b.created_at ?? 0).getTime() - new Date(a.created_at ?? 0).getTime())
+        .slice(0, visibleCount);
 
     return (
         <AppLayout breadcrumbs={breadcrumbs} flash={flash}>
@@ -97,46 +112,50 @@ export default function contactMessages({ contactMessages }: { contactMessages?:
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {(contactMessages ?? [])
-                                            .slice()
-                                            .sort((a, b) => new Date(b.created_at ?? 0).getTime() - new Date(a.created_at ?? 0).getTime())
-                                            .map((contactMessage) => (
-                                                <tr
-                                                    key={contactMessage.id}
-                                                    className="cursor-pointer border-b text-[12px] whitespace-nowrap md:text-sm"
-                                                    onClick={() => handleView(contactMessage)}
-                                                >
-                                                    <td className="px-6 py-4">
-                                                        {(contactMessage?.name?.length ?? 0) > 22
-                                                            ? `${contactMessage.name?.slice(0, 22) ?? ''}...`
-                                                            : (contactMessage.name ?? '')}
-                                                    </td>
-                                                    <td className="px-6 py-4">{contactMessage.email}</td>
-                                                    <td className="px-6 py-4 hover:underline">
-                                                        {contactMessage.message.length > 22
-                                                            ? `${contactMessage.message.slice(0, 22)}...`
-                                                            : contactMessage.message}
-                                                    </td>
-                                                    <td className="px-6 py-4">
-                                                        {new Date(contactMessage.created_at ?? 0).toLocaleDateString('en-US', {
-                                                            year: 'numeric',
-                                                            month: '2-digit',
-                                                            day: '2-digit',
-                                                            hour: '2-digit',
-                                                            minute: '2-digit',
-                                                        })}
-                                                    </td>
-                                                    <td className="flex gap-2 px-6 py-4">
-                                                        <Button type="button" variant="secondary" onClick={() => handleView(contactMessage)}>
-                                                            View
-                                                        </Button>
-                                                    </td>
-                                                </tr>
-                                            ))}
+                                        {visibleMessages.map((contactMessage) => (
+                                            <tr
+                                                key={contactMessage.id}
+                                                className="cursor-pointer border-b text-[12px] whitespace-nowrap md:text-sm"
+                                                onClick={() => handleView(contactMessage)}
+                                            >
+                                                <td className="px-6 py-4">
+                                                    {(contactMessage?.name?.length ?? 0) > 22
+                                                        ? `${contactMessage.name?.slice(0, 22) ?? ''}...`
+                                                        : (contactMessage.name ?? '')}
+                                                </td>
+                                                <td className="px-6 py-4">{contactMessage.email}</td>
+                                                <td className="px-6 py-4 hover:underline">
+                                                    {contactMessage.message.length > 22
+                                                        ? `${contactMessage.message.slice(0, 22)}...`
+                                                        : contactMessage.message}
+                                                </td>
+                                                <td className="px-6 py-4">
+                                                    {new Date(contactMessage.created_at ?? 0).toLocaleDateString('en-US', {
+                                                        year: 'numeric',
+                                                        month: '2-digit',
+                                                        day: '2-digit',
+                                                        hour: '2-digit',
+                                                        minute: '2-digit',
+                                                    })}
+                                                </td>
+                                                <td className="flex gap-2 px-6 py-4">
+                                                    <Button type="button" variant="secondary" onClick={() => handleView(contactMessage)}>
+                                                        View
+                                                    </Button>
+                                                </td>
+                                            </tr>
+                                        ))}
                                     </tbody>
                                 </table>
                             </div>
                         </div>
+                        {visibleCount < (contactMessages?.length ?? 0) && (
+                            <div className="my-4 flex justify-center">
+                                <Button variant="outline" onClick={handleLoadMore} disabled={loading}>
+                                    {loading ? 'Loading...' : 'Load More'}
+                                </Button>
+                            </div>
+                        )}
                     </div>
                 </div>
             </div>

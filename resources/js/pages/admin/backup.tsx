@@ -23,13 +23,14 @@ export default function Backup({
     lastLoad?: string;
     flash?: FlashProps;
 }) {
-    const [loading, setLoading] = useState(false);
+    // Track which action is loading
+    const [loadingAction, setLoadingAction] = useState<'backup' | 'restore' | 'delete' | null>(null);
     const [successMessage, setSuccessMessage] = useState<string | null>(null);
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
     const handleBackup = async () => {
         if (!confirm('Are you sure you want to backup?')) return;
-        setLoading(true);
+        setLoadingAction('backup');
         setSuccessMessage(null);
         setErrorMessage(null);
         try {
@@ -45,13 +46,13 @@ export default function Backup({
         } catch (error: any) {
             setErrorMessage(error.response?.data?.error || 'Error during backup.');
         } finally {
-            setLoading(false);
+            setLoadingAction(null);
         }
     };
 
     const handleLoad = async () => {
         if (!confirm('Are you sure you want to load current backup?')) return;
-        setLoading(true);
+        setLoadingAction('restore');
         setSuccessMessage(null);
         setErrorMessage(null);
         try {
@@ -67,13 +68,13 @@ export default function Backup({
         } catch (error: any) {
             setErrorMessage(error.response?.data?.error || 'Error loading backup.');
         } finally {
-            setLoading(false);
+            setLoadingAction(null);
         }
     };
 
     const handleDelete = async () => {
         if (!confirm('Are you sure you want to delete current backup?')) return;
-        setLoading(true);
+        setLoadingAction('delete');
         setSuccessMessage(null);
         setErrorMessage(null);
         try {
@@ -89,7 +90,7 @@ export default function Backup({
         } catch (error: any) {
             setErrorMessage(error.response?.data?.error || 'Error deleting backup.');
         } finally {
-            setLoading(false);
+            setLoadingAction(null);
         }
     };
 
@@ -128,14 +129,14 @@ export default function Backup({
                     </div>
 
                     <div className="flex gap-2">
-                        <Button variant="focus" type="button" onClick={handleBackup} disabled={loading}>
-                            {loading ? 'Processing...' : 'Backup'}
+                        <Button variant="focus" type="button" onClick={handleBackup} disabled={loadingAction !== null}>
+                            {loadingAction === 'backup' ? 'Processing...' : 'Backup'}
                         </Button>
-                        <Button type="button" onClick={handleLoad} disabled={loading || !lastBackup}>
-                            {loading ? 'Processing...' : 'Restore'}
+                        <Button type="button" onClick={handleLoad} disabled={loadingAction !== null || !lastBackup}>
+                            {loadingAction === 'restore' ? 'Processing...' : 'Restore'}
                         </Button>
-                        <Button variant="destructive" type="button" onClick={handleDelete} disabled={loading || !lastBackup}>
-                            {loading ? 'Processing...' : 'Delete'}
+                        <Button variant="destructive" type="button" onClick={handleDelete} disabled={loadingAction !== null || !lastBackup}>
+                            {loadingAction === 'delete' ? 'Processing...' : 'Delete'}
                         </Button>
                     </div>
                 </div>
