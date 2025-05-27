@@ -22,12 +22,12 @@ export default function Events({ events }: { events: Event[] }) {
                                 .map((event, idx) => (
                                     <div
                                         key={event.id}
-                                        className="flex flex-col items-center justify-between gap-2 rounded-lg border p-8 shadow-lg sm:h-[394px] sm:w-[394px]"
+                                        className="relative flex w-full flex-col items-center justify-between gap-2 rounded-lg border p-8 shadow-lg sm:h-full sm:min-h-[394px] sm:w-[394px]"
                                         data-aos="zoom-in-right"
                                         data-aos-delay={`${idx * 100}`}
                                     >
                                         <img
-                                            src={typeof event.image === 'string' ? event.image : 'images/code_collab.webp'}
+                                            src={typeof event.image === 'string' ? event.image : 'images/save_time.webp'}
                                             className="h-[170px] w-full rounded-lg object-contain"
                                             alt={event.title}
                                         />
@@ -45,19 +45,43 @@ export default function Events({ events }: { events: Event[] }) {
                                             </p>
                                         </div>
                                         <p className="text-primary/80 text-center text-sm font-medium">
-                                            Registration ends on{' '}
                                             <span className="font-bold">
                                                 {event.registration_end
-                                                    ? new Date(event.registration_end).toLocaleDateString('en-US', {
-                                                          year: 'numeric',
-                                                          month: 'long',
-                                                          day: 'numeric',
-                                                          hour: '2-digit',
-                                                          minute: '2-digit',
-                                                      })
+                                                    ? new Date(event.registration_end) < new Date()
+                                                        ? 'Registration Closed'
+                                                        : 'Registration ends on ' +
+                                                          new Date(event.registration_end).toLocaleDateString('en-US', {
+                                                              year: 'numeric',
+                                                              month: 'long',
+                                                              day: 'numeric',
+                                                              hour: '2-digit',
+                                                              minute: '2-digit',
+                                                          })
                                                     : 'N/A'}
                                             </span>
                                         </p>
+
+                                        {event.start && new Date(event.start) < new Date() && event.end && new Date(event.end) > new Date() ? (
+                                            <p className="text-primary/80 flex flex-col items-center text-center text-sm font-medium">
+                                                <span className="text-focus font-bold">Event is ongoing</span>
+                                                <span className="bg-focus/80 absolute top-5 right-5 h-5 w-5 animate-pulse rounded-full border-4"></span>
+                                                {event.end ? (
+                                                    <span>
+                                                        Ends on{' '}
+                                                        <span className="font-bold">
+                                                            {new Date(event.end).toLocaleDateString('en-US', {
+                                                                year: 'numeric',
+                                                                month: 'long',
+                                                                day: 'numeric',
+                                                                hour: '2-digit',
+                                                                minute: '2-digit',
+                                                            })}
+                                                        </span>
+                                                    </span>
+                                                ) : null}
+                                            </p>
+                                        ) : null}
+
                                         <div className="flex items-center justify-center gap-2">
                                             <Button
                                                 variant="outline"

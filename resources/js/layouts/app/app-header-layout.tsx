@@ -14,10 +14,17 @@ export default function AppHeaderLayout({
     loading,
 }: PropsWithChildren<{ breadcrumbs?: BreadcrumbItem[]; className?: string; loading?: boolean }>) {
     const { events } = usePage().props;
-    const upcomingEvent = (Array.isArray(events) ? events : []).find((event) => new Date(event.start).getTime() > Date.now());
+    const upcomingEvent = (Array.isArray(events) ? events : []).find((event) => new Date(event.end).getTime() > Date.now());
     return (
         <AppShell>
-            {upcomingEvent && <AppHeaderMessage message={'Upcomming ' + upcomingEvent.title} startAt={new Date(upcomingEvent.start)} />}
+            {upcomingEvent && (
+                <AppHeaderMessage
+                    message={'Upcomming ' + upcomingEvent.title}
+                    startAt={new Date(upcomingEvent.start)}
+                    endAt={new Date(upcomingEvent.end)}
+                    title={upcomingEvent.title}
+                />
+            )}
             <AppHeader breadcrumbs={breadcrumbs} />
             {loading ? null : (
                 <>
