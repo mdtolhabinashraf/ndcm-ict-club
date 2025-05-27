@@ -135,7 +135,10 @@ export default function Visitor({
                                     </thead>
                                     <tbody>
                                         {visibleVisitors.map(({ visitor, count }) => (
-                                            <tr key={visitor.ip_address} className="border-b text-[12px] whitespace-nowrap md:text-sm">
+                                            <tr
+                                                key={`${visitor.ip_address ?? 'N/A'}_${visitor.user_id ?? 'N/A'}_${visitor.user_agent ?? 'N/A'}`}
+                                                className="border-b text-[12px] whitespace-nowrap md:text-sm"
+                                            >
                                                 <td className="px-6 py-4">
                                                     {visitor.user_id ?? 'N/A'}
                                                     {visitor.ip_address &&
