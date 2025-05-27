@@ -31,6 +31,8 @@ export default function Visitor({
     currentUserAgent?: string;
 }) {
     const { flash, auth } = usePage().props as FlashProps & { auth?: { user?: { id?: number } } };
+    // State to store geolocation info for each IP
+    const [ipGeoMap, setIpGeoMap] = useState<Record<string, IpGeo>>({});
 
     // Group visitors by IP, user_id, and user_agent and count visits
     const ipUserAgentVisitMap = (visitors ?? []).reduce<Record<string, { count: number; visitor: Visitor }>>((acc, visitor) => {
@@ -61,9 +63,6 @@ export default function Visitor({
         // Otherwise, sort by last_activity (within BD or within non-BD)
         return (b.visitor.last_activity ?? 0) - (a.visitor.last_activity ?? 0);
     });
-
-    // State to store geolocation info for each IP
-    const [ipGeoMap, setIpGeoMap] = useState<Record<string, IpGeo>>({});
 
     useEffect(() => {
         const uniqueIps = Array.from(new Set((visitors ?? []).map((v) => v.ip_address).filter(Boolean)));
