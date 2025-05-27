@@ -50,7 +50,17 @@ export default function Visitor({
         return acc;
     }, {});
 
-    const groupedVisitors = Object.values(ipUserAgentVisitMap).sort((a, b) => (b.visitor.last_activity ?? 0) - (a.visitor.last_activity ?? 0));
+    const groupedVisitors = Object.values(ipUserAgentVisitMap).sort((a, b) => {
+        const aCountry = ipGeoMap[a.visitor.ip_address ?? '']?.country;
+        const bCountry = ipGeoMap[b.visitor.ip_address ?? '']?.country;
+
+        // Put BD at the top
+        if (aCountry === 'BD' && bCountry !== 'BD') return -1;
+        if (aCountry !== 'BD' && bCountry === 'BD') return 1;
+
+        // Otherwise, sort by last_activity (within BD or within non-BD)
+        return (b.visitor.last_activity ?? 0) - (a.visitor.last_activity ?? 0);
+    });
 
     // State to store geolocation info for each IP
     const [ipGeoMap, setIpGeoMap] = useState<Record<string, IpGeo>>({});
